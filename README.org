@@ -1,0 +1,22 @@
+#+TITLE: Headlless client
+
+Following the instructions from
+http://support.code42.com/CrashPlan/Latest/Configuring/Using_CrashPlan_On_A_Headless_Computer
+
+* Building
+- Accepts EULA automatically
+
+* Running
+#+BEGIN_SRC sh :tangle launch.sh
+
+  docker run --rm \
+         -e HEADLESS=crashplan@10.10.100.91 \
+           -e DISPLAY=$DISPLAY \
+           -v /tmp/.X11-unix:/tmp/.X11-unix \
+           -v $PWD/.ui_info:/var/lib/crashplan/.ui_info \
+           -v ~/.ssh/id_rsa:/root/.ssh/id_rsa \
+           -it \
+           crashplan-client
+
+#+END_SRC
+
