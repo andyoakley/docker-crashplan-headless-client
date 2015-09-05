@@ -1,4 +1,4 @@
-#+TITLE: Headlless client
+#+TITLE: CrashPlan desktop client for headless servers
 
 Following the instructions from
 http://support.code42.com/CrashPlan/Latest/Configuring/Using_CrashPlan_On_A_Headless_Computer
@@ -6,9 +6,20 @@ http://support.code42.com/CrashPlan/Latest/Configuring/Using_CrashPlan_On_A_Head
 * Building
 - Accepts EULA automatically
 
-* Running
-#+BEGIN_SRC sh :tangle launch.sh
+#+BEGIN_SRC sh
+docker build -t crashplan-client .
+#+END_SRC
 
+* Running
+Environment variables
+- =HEADLESS= :: This is the server (or user@server) into which the container will ssh to.
+
+Volumes passed into the container
+- =.ui_info= :: Take this from =/var/lib/crashplan/.ui_info= on the server. Contains the auth token necessary to connect to the engine.
+
+The =DISPLAY= and =.X11-unix= are used to support X11 forwarding to the Docker host. The SSH private key is passed into the container so that it in turn can open up the SSH tunnel to the headless server. Obviously the headless server needs to have the corresponding public key in =authorized_keys=.
+
+#+BEGIN_SRC sh :tangle launch.sh
   docker run --rm \
          -e HEADLESS=crashplan@10.10.100.91 \
            -e DISPLAY=$DISPLAY \
